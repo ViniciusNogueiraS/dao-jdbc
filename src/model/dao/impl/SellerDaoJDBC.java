@@ -2,6 +2,7 @@ package model.dao.impl;
 
 import application.DB;
 import application.DbException;
+import com.mysql.jdbc.Statement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import static javafx.scene.input.KeyCode.I;
 import model.dao.SellerDao;
 import model.entities.Department;
 import model.entities.Seller;
@@ -24,8 +24,36 @@ public class SellerDaoJDBC implements SellerDao{
     }
     
     @Override
-    public void insert(Seller obj) {
-        return;
+    public void insert(Seller seller) {
+        PreparedStatement st = null;
+        try{
+            st = connection.prepareStatement("insert into seller(Name, Email, BirthDate, BaseSalary, DepartmentId) "
+                + "values(?, ?, ?, ?, ?)",
+                Statement.RETURN_GENERATED_KEYS);
+            
+            st.setString(1, seller.getName());
+            st.setString(2, seller.getEmail());
+            st.setDate(3, new java.sql.Date(seller.getBirthDate().getTime()));
+            st.setDouble(4, seller.getBaseSalary());
+            st.setInt(5, seller.getDepartment().getId());
+            
+            int linhasAfetadas = st.executeUpdate();
+            
+            if(linhasAfetadas > 0){//adicionando a chave primária gerada automaticamente pelo auto_invrement do bd!
+                ResultSet rs = st.getGeneratedKeys();
+                if(rs.next()){
+                    int id = rs.getInt(1);
+                    seller.setId(id);
+                }
+                DB.closeResultSet(rs);
+            }else{
+                throw new DbException("Erro inesperado! Nenhuma linha alterada!");
+            }
+        }catch(SQLException e){
+            throw new DbException(e.getMessage());
+        }finally{
+            DB.closeStatement(st);
+        }
     }
 
     @Override
@@ -138,7 +166,6 @@ public class SellerDaoJDBC implements SellerDao{
             DB.closeStatement(st);
             DB.closeResultSet(rs);
         }
-        
     }
     
     private Department instanciaDepartment(ResultSet rs) throws SQLException{
@@ -158,5 +185,4 @@ public class SellerDaoJDBC implements SellerDao{
         seller.setDepartment(dep);
         return seller;
     }
-    
 }
