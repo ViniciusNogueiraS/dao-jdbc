@@ -1,17 +1,12 @@
 package application;
 
-import java.util.List;
-import java.util.Scanner;
 import model.dao.DaoFactory;
-import model.dao.SellerDao;
-import model.entities.Department;
-import model.entities.Seller;
+import model.dao.DepartmentDao;
 
 public class Program {
 
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        
+        /*
         SellerDao sellerDao = DaoFactory.createSellerDao();
         
         System.out.println("=== TESTE 1: Seller findByID ===");
@@ -24,13 +19,13 @@ public class Program {
         for(Seller obj : list){
             System.out.println(obj);
         }
-        /*
+        
         System.out.println("\n=== TESTE 3: Seller findAll ===");
         list = sellerDao.findAll();
         for(Seller obj : list){
             System.out.println(obj);
         }
-        
+       
         System.out.println("\n=== TESTE 4: Seller insert ===");
         seller = new Seller(null, "Greg White", "greg@gmail.com", new Date(), 4200.0, dep);
         sellerDao.insert(seller);
@@ -41,7 +36,7 @@ public class Program {
         seller.setName("Martha Wine");
         sellerDao.update(seller);
         System.out.println("Registro atualizado!");
-        */
+        
         
         System.out.println("\n=== TESTE 6: Seller delete ===");
         System.out.print("Entre com o id do vendedor a ser deletado: ");
@@ -50,5 +45,33 @@ public class Program {
         System.out.println("Registro deletado!");
         
         sc.close();
+        */
+        
+        DepartmentDao depDao = DaoFactory.createDepartmentDao();
+        /*
+        System.out.println("=== TESTE 1: Department findByID ===");
+        Department dep = depDao.findById(2);
+        System.out.println(dep);
+        
+        System.out.println("=== TESTE 2: Department findAll ===");
+        List<Department> list = depDao.findAll();
+        System.out.println(list);
+        
+        System.out.println("=== TESTE 3: Department insert ===");
+        Department dep = new Department(null, "Sports");
+        depDao.insert(dep);
+        System.out.println("Inserido! Novo ID = "+dep.getId());
+        
+        System.out.println("=== TESTE 4: Department update ===");
+        dep.setName("Fitness");
+        depDao.update(dep);
+        System.out.println("Registro atualizado!");
+        */
+        
+        System.out.println("=== TESTE 5: Department delete ===");
+        int n = 5;
+        depDao.deleteById(5);
+        System.out.println("Registro deletado!");
+        
     }
 }
